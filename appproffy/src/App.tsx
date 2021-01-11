@@ -1,11 +1,17 @@
+import 'react-native-gesture-handler';
 import React from 'react';
-import { Text, View } from 'react-native';
+import { View } from 'react-native';
+import { NavigationContainer } from '@react-navigation/native';
+
+import Routes from './routes';
 
 const App: React.FC = () => {
   return (
-    <View>
-      <Text>Hello, ready to go!</Text>
-    </View>
+    <NavigationContainer>
+      <View style={{ flex: 1 }}>
+        <Routes />
+      </View>
+    </NavigationContainer>
   );
 }
 
