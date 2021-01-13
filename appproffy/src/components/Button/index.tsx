@@ -8,11 +8,12 @@ import {
 
 interface ButtonProps extends RectButtonProperties {
   children: string;
+  color?: boolean;
 }
 
-const Button: React.FC<ButtonProps> = ({ children, ...rest }) => {
+const Button: React.FC<ButtonProps> = ({ children, color, ...rest }) => {
   return (
-    <Container {...rest}>
+    <Container {...rest} color={color}>
       <ButtonText>
         {children}
       </ButtonText>
