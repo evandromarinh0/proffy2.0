@@ -1,4 +1,3 @@
-import { BorderlessButton } from 'react-native-gesture-handler';
 import styled from 'styled-components/native';
 
 export const Container = styled.View`
@@ -44,7 +43,7 @@ export const Title = styled.Text`
   font-family: 'Poppins-SemiBold';
 `;
 
-export const CreateAccount = styled(BorderlessButton)`
+export const CreateAccount = styled.TouchableOpacity`
   
 `;
 
@@ -72,7 +71,7 @@ export const RemmemberMe = styled.Text`
   font-size: 12px;
 `;
 
-export const ForgotPassword = styled(BorderlessButton)``;
+export const ForgotPassword = styled.TouchableOpacity``;
 
 export const ForgotPasswordText = styled.Text`
   font-family: 'Poppins-Regular';
