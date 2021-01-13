@@ -1,7 +1,10 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useRef, useState } from 'react';
 import { KeyboardAvoidingView, Platform, StatusBar, View } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 import { ScrollView } from 'react-native-gesture-handler';
 import CheckBox from '@react-native-community/checkbox';
+import { Form } from '@unform/mobile';
+import { FormHandles } from '@unform/core';
 
 import logoImg from '../../assets/logo.png';
 import backgroundImg from '../../assets/sign-in-background.png';
@@ -28,11 +31,25 @@ import {
 } from './styles';
 
 const SignIn: React.FC = () => {
-  const [toggleCheckBox, setToggleCheckBox] = useState(false);
+  const [toggleCheckBox, setToggleCheckBox] = useState(true);
+  const navigation = useNavigation();
+  const formRef = useRef<FormHandles>(null);
 
   const handleToggleCheckBox = useCallback(() => {
     setToggleCheckBox(!toggleCheckBox);
-  }, [toggleCheckBox])
+  }, [toggleCheckBox]);
+
+  const handleNavigateToCreateAccount = useCallback(() => {
+    navigation.navigate('SignUp');
+  }, [navigation]);
+
+  const handleNavigateToForgotPassword = useCallback(() => {
+    navigation.navigate('ForgotPassword');
+  }, [navigation]);
+
+  const handleSignIn = useCallback((data: object) => {
+    console.log(data)
+  }, []);
 
   return (
     <>
@@ -52,30 +69,43 @@ const SignIn: React.FC = () => {
             <Lower>
               <Login>
                 <Title>Fazer login</Title>
-                <CreateAccount onPress={() => {}}>
+                <CreateAccount onPress={handleNavigateToCreateAccount}>
                   <CreateAccountText>Criar uma conta</CreateAccountText>
                 </CreateAccount>
               </Login>
 
-              <Input name="email" placeholder="E-mail" />
-              <Input name="password" placeholder="Senha" />
+              <Form ref={formRef} onSubmit={handleSignIn}>
+                <Input 
+                  name="email" 
+                  autoCorrect={false} 
+                  autoCapitalize="none"
+                  keyboardType="email-address" 
+                  placeholder="E-mail" 
+                />
+                <Input 
+                  name="password" 
+                  secureTextEntry
+                  returnKeyType="send"
+                  placeholder="Senha" 
+                  onSubmitEditing={() => formRef.current?.submitForm()}
+                />
+                <Remmember>
+                  <LeftSide>
+                    <CheckBox 
+                      disabled={false} 
+                      value={toggleCheckBox} 
+                      onValueChange={handleToggleCheckBox}
+                      tintColors={{true: '#04d361'}}
+                    />
+                    <RemmemberMe>Lembrar-me</RemmemberMe>
+                  </LeftSide>
 
-              <Remmember>
-                <LeftSide>
-                  <CheckBox 
-                    disabled={false} 
-                    value={toggleCheckBox} 
-                    onValueChange={handleToggleCheckBox} 
-                  />
-                  <RemmemberMe>Lembrar-me</RemmemberMe>
-                </LeftSide>
-
-                <ForgotPassword onPress={() => {}}>
-                  <ForgotPasswordText>Esqueci minha senha</ForgotPasswordText>
-                </ForgotPassword>
-              </Remmember>
-                
-              <Button onPress={() =>{}}>Entrar</Button>
+                  <ForgotPassword onPress={handleNavigateToForgotPassword}>
+                    <ForgotPasswordText>Esqueci minha senha</ForgotPasswordText>
+                  </ForgotPassword>
+                </Remmember>
+                <Button onPress={() => formRef.current?.submitForm()}>Entrar</Button>
+              </Form>
             </Lower>
           </Container>
         </ScrollView>
