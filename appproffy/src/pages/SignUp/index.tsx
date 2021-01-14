@@ -17,26 +17,26 @@ import {
 
 const SignUp: React.FC = () => {
   const navigation = useNavigation();
+  const swiperRef = useRef<any>(null);
   const formIdRef = useRef<FormHandles>(null);
   const formCredentialsRef = useRef<FormHandles>(null);
 
   const handleNavigateToSignIn = useCallback(() => {
-    navigation.navigate('SignIn');
+    navigation.goBack();
   }, [navigation]);
 
   const handleSignUpFullName = useCallback((data: object) => {
-    console.log(data)
+    console.log(data);
+  }, []);
+
+  const handleSwipeNext = useCallback(() => {
+    formIdRef.current?.submitForm();
+
+    swiperRef.current.scrollBy(1);
   }, []);
 
   const handleSignUpCredentials = useCallback((data: object) => {
     console.log(data)
-  }, []);
-
-  const handleSubmitAndSwipeNext = useCallback(() => {
-    formIdRef.current?.submitForm();
-
-    // addSwipeNext();
-
   }, []);
 
   return (
@@ -48,6 +48,7 @@ const SignUp: React.FC = () => {
       </BackButton>
       
       <Swiper 
+        ref={swiperRef}
         loop={false}
       >
         <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === 'ios' ? 'padding' : undefined} enabled>
@@ -55,7 +56,7 @@ const SignUp: React.FC = () => {
             <Title>01. Quem é você?</Title>
             <Form ref={formIdRef} onSubmit={handleSignUpFullName}>
               <Input 
-                name="name" 
+                name="first-name" 
                 autoCorrect={true}
                 autoCapitalize="words"
                 placeholder="Nome" 
@@ -66,7 +67,7 @@ const SignUp: React.FC = () => {
                 autoCapitalize="words"
                 placeholder="Sobrenome" 
               />
-              <Button color onPress={handleSubmitAndSwipeNext}>Próximo</Button>
+              <Button color onPress={handleSwipeNext}>Próximo</Button>
             </Form>
           </Container>
         </KeyboardAvoidingView>
