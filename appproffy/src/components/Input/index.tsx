@@ -46,14 +46,14 @@ const Input: React.FC<InputProps> = ({ name, ...rest }) => {
   }, []);
 
   return (
-    <Container isFocused={isFocused}>
+    <Container isFocused={isFocused} hasError={!!error}>
       <TextInput
         defaultValue={defaultValue}
         onFocus={handleInputFocus}
         onBlur={handleInputBlur}
         onChangeText={(value) => {inputValueRef.current.value = value}}
-        keyboardAppearence="dark" 
-        placeholderTextColor="#9C98A6" 
+        keyboardAppearance='dark'
+        placeholderTextColor='#9C98A6'
         {...rest} 
       />
     </Container>
