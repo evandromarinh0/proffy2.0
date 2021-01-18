@@ -5,6 +5,8 @@ import SignIn from '../pages/SignIn';
 import SignUp from '../pages/SignUp';
 import ForgotPassword from '../pages/ForgotPassword';
 
+import Landing from '../pages/Landing';
+
 const Auth = createStackNavigator();
 
 const AuthRoutes: React.FC = () => {
@@ -13,6 +15,9 @@ const AuthRoutes: React.FC = () => {
       <Auth.Screen name="SignIn" component={SignIn} />
       <Auth.Screen name="SignUp" component={SignUp} />
       <Auth.Screen name="ForgotPassword" component={ForgotPassword} />
+
+      {/* FROM NOW ON THESE ROUTES ARE PRIVATES */}
+      <Auth.Screen name="Landing" component={Landing} />
     </Auth.Navigator>
   );
 }
