@@ -1,10 +1,11 @@
-import React, { useCallback, useRef, useState } from 'react';
-import { KeyboardAvoidingView, Platform, StatusBar, View } from 'react-native';
+import React, { useCallback, useContext, useRef, useState } from 'react';
+import { Alert, KeyboardAvoidingView, Platform, StatusBar, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { ScrollView } from 'react-native-gesture-handler';
 import CheckBox from '@react-native-community/checkbox';
 import { Form } from '@unform/mobile';
 import { FormHandles } from '@unform/core';
+import * as Yup from 'yup';
 
 import logoImg from '../../assets/logo.png';
 import backgroundImg from '../../assets/sign-in-background.png';
@@ -29,11 +30,20 @@ import {
   ForgotPassword,
   ForgotPasswordText
 } from './styles';
+import getValidationErrors from '../../utils/ValidationError';
+import { AuthContext } from '../../hooks/AuthContext';
+
+interface SignInForm {
+  email: string;
+  password: string;
+}
 
 const SignIn: React.FC = () => {
   const [toggleCheckBox, setToggleCheckBox] = useState(true);
   const navigation = useNavigation();
   const formRef = useRef<FormHandles>(null);
+
+  // const { signIn } = useContext(AuthContext);
 
   const handleToggleCheckBox = useCallback(() => {
     setToggleCheckBox(!toggleCheckBox);
@@ -47,8 +57,42 @@ const SignIn: React.FC = () => {
     navigation.navigate('ForgotPassword');
   }, [navigation]);
 
-  const handleSignIn = useCallback((data: object) => {
-    console.log(data)
+  const handleSignIn = useCallback(async(data: SignInForm) => {
+    try {
+      formRef.current?.setErrors({})
+
+      const schema = Yup.object().shape({
+        email: Yup.string().required('Campo obrigatório').email('Digite um e-mail válido'),
+        password: Yup.string().required('Campo obrigatório')
+      });
+      
+      await schema.validate(data, {
+        abortEarly: false,
+      });
+
+      // it should SignIn here, example:
+
+      // await signIn({
+      //   email: data.email,
+      //   password: data.password
+      // });
+
+      navigation.navigate('Landing');
+
+    } catch (err) {
+      if(err instanceof Yup.ValidationError) {
+        const errors = getValidationErrors(err);
+
+        formRef.current?.setErrors(errors);
+
+        return;
+      }
+
+      Alert.alert(
+        'Erro na autenticação',
+        'Ocorreu um erro ao tentar fazer login, cheque suas credenciais'
+      );
+    }
   }, []);
 
   return (
