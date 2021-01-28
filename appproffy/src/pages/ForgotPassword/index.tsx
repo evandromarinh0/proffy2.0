@@ -1,9 +1,12 @@
 import React, { useCallback, useRef } from 'react';
-import { Image, KeyboardAvoidingView, Platform, StatusBar, View } from 'react-native';
+import { Alert, Image, KeyboardAvoidingView, Platform, StatusBar, View } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { useNavigation } from '@react-navigation/native';
 import { Form } from '@unform/mobile';
 import { FormHandles } from '@unform/core';
+import * as Yup from 'yup';
+
+import getValidationErrors from '../../utils/ValidationError';
 
 import logoImg from '../../assets/logo.png';
 import backImg from '../../assets/arrow-left.png';
@@ -27,13 +30,47 @@ import {
 const ForgotPassword: React.FC = () => {
   const { goBack } = useNavigation();
   const formRef = useRef<FormHandles>(null);
+  const navigation = useNavigation();
 
   const handleNavigateGoBack = useCallback(() => {
     goBack();
   }, [goBack]);
 
-  const handleSendEmailVerification = useCallback((data: object) => {
-    console.log(data);
+  const handleSendEmailVerification = useCallback(async (data: object) => {
+    try {
+      formRef.current?.setErrors({})
+
+      const schema = Yup.object().shape({
+        email: Yup.string().required('Campo obrigatório').email('Digite um e-mail válido'),
+      });
+      
+      await schema.validate(data, {
+        abortEarly: false,
+      });
+
+      // it should send the post request here
+
+      Alert.alert(
+        'E-mail de recuperação enviado',
+        'Verifique no seu e-mail para confirmar recuperação de senha'
+      );
+
+      navigation.navigate('SignIn');
+
+    } catch (err) {
+      if(err instanceof Yup.ValidationError) {
+        const errors = getValidationErrors(err);
+
+        formRef.current?.setErrors(errors);
+
+        return;
+      }
+
+      Alert.alert(
+        'Erro na recuperação',
+        'Ocorreu um erro ao tentar enviar e-mail de recuperação, tente novamente'
+      );
+    }
   }, []);
   
   return (
