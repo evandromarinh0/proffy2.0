@@ -121,8 +121,8 @@ const SignIn: React.FC = () => {
               <Form ref={formRef} onSubmit={handleSignIn}>
                 <Input 
                   name="email" 
-                  autoCorrect={false} 
                   autoCapitalize="none"
+                  autoCorrect={false} 
                   keyboardType="email-address" 
                   placeholder="E-mail" 
                 />
