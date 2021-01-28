@@ -39,11 +39,11 @@ const Landing: React.FC = () => {
   }, [navigation]);
 
   const handleNavigateToStudyPage = useCallback(() => {
-    //NAVIGATE TO STUDY PAGE
+    navigation.navigate('Study');
   }, [navigation]);
 
   const handleNavigateToGiveClassesPage = useCallback(() => {
-    // NAVIGATE TO GIVE CLASSES PAGE
+    navigation.navigate('GiveClasses');
   }, [navigation]);
 
   return (
@@ -76,7 +76,7 @@ const Landing: React.FC = () => {
 
             <GiveClassesButton onPress={handleNavigateToGiveClassesPage}>
               <Image source={giveClassesIcon} />
-              <GiveClassesButtonText>Estudar</GiveClassesButtonText>
+              <GiveClassesButtonText>Dar aulas</GiveClassesButtonText>
             </GiveClassesButton>
           </ButtonsContainer>
 
